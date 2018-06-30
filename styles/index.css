@@ -1,0 +1,13 @@
+html, body {
+    padding: 5%;
+    background-color: grey;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+
+}
+.valor {
+    color: white;
+    background-color: #1621b4;
+    font-size: 2.5em;
+    text-align: center;
+    padding: 1%;
+}
