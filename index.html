@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="styles/index.css">
+    <script src="scripts/index.js"></script>
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="styles/foundation.min.css">
     <title>Currency Converter</title>
@@ -693,6 +694,7 @@
         $(document).foundation();
     </script>
     <script>
+        import https from 'https';
         $(document).ready(function () {
 
             $("#CURR_FR_VAL").bind('input propertychange', function () {
@@ -723,24 +725,32 @@
 
                 let currToSelect = $("#CURR_TO");
                 let to = currToSelect.val();
-                alert(fr + " : " + to);
-                let currId = fr + "_" + to;
+                alert(`${fr} : ${to}`);
+                let currId = `{fr}_{to}`;
+                
+                const Url = `https://free.currencyconverterapi.com/api/v5/convert?q=${currId}compact=ultra`;
+                https.get(url, function(res){
+                    var body = '';
+                    res.on('data', function(chunk){
+                        body += chunk;
+                    });
 
-                $.getJSON("https://free.currencyconverterapi.com/api/v5/convert?q=" + currId + "&compact=ultra&apiKey=",
-                    function (data) {
-                        try {
+                    res.on('end', function(){
+                        let jsonObj = JSON.parse(body);
+                            
+                        let val = jsonObj[currId];
+                        if(val) {
                             let currFrVal = parseFloat(document.getElementById("CURR_FR_VAL").value);
-                            currVal.html(numeral(currFrVal * data[currId].val).format("0,0.00[0]"));
+                            const total = val * currFrVal;
+                            currVal.html(Math.round(total * 100) / 100);
 
+                        } else {
+                            const err = new Error(`Value not found for ${currId} `);
+                            console.log(err);
+                            cb(err);
                         }
-                        catch (e) {
-                            nullCurrVal();
-                            alert("Please enter a number in the Amount field.");
-                        }
-
-                    }
-                );
-
+                    });
+                });
             }
 
         }
@@ -750,13 +760,6 @@
 
     </script>
 
-    <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js').catch(function (err) {
-                console.log('ServiceWorker registration failed: ', err);
-            });
-        }
-    </script>
     </div>
 
 </body>
