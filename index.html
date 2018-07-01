@@ -15,7 +15,6 @@
     <div id="result" class="valor">Currency Converter</div>
     <div class="sub-container sub-container-calculator no-print">
         <div class="try-converter">
-            <p>In action</p>
             <div class="row in-action">
 
                 <div class="medium-12 columns ">
@@ -726,11 +725,12 @@
                 alert(fr + " : " + to);
                 let currId = fr + "_" + to;
 
-                $.getJSON("https://free.currencyconverterapi.com/api/v5/convert?q=" + currId + "&compact=ultra&apiKey=",
+                $.getJSON(`https://free.currencyconverterapi.com/api/v3/convert?q=" ${currId} &compact=y&callback=?`,
                     function (data) {
                         try {
                             let currFrVal = parseFloat(document.getElementById("CURR_FR_VAL").value);
                             currVal.html(numeral(currFrVal * data[currId].val).format("0,0.00[0]"));
+                            console.log("Onn arrive pas ici");
 
                         }
                         catch (e) {
